@@ -1,0 +1,109 @@
+1. GitHub Repository Setup:
+
+     •   Task:
+          o Create a new GitHub repository named "CloudDevOpsProject"
+          o Initialize the repository with a README.
+     •   Deliverables:
+          o URL to the GitHub repository.
+
+2. Containerization with Docker:
+
+    •    Task:
+           o Deliver docker-compose.yml file for building and testing the application
+              with the Database locally.
+           o Find the source code from: https://github.com/Ibrahim-
+              Adel15/iVolveFinalProject.git
+    •    Deliverables:
+           o Docker-compose file is committed to the repository.
+
+3. Infrastructure Provisioning with Terraform:
+
+    •    Task:
+             o       Deliver Terraform modules for AWS resource provisioning:
+
+                     1. Network Module (VPC, public & private subnets, IGW, NAT, and
+                        Network ACL)
+                     2. Server Module (EC2 instances for Jenkins with Security Groups)
+                     3. EKS Module (EKS with 2 worker nodes in different private subnets
+                        & Availability zones)
+                     4. ECR Module
+
+                o    Use S3 Terraform Backend state.
+
+    •    Deliverables:
+             o Terraform modules are committed to the repository.
+
+4. Configuration Management with Ansible:
+
+    •    Task:
+            o  Deliver Ansible playbooks for Jenkins EC2 instance configuration:
+                 Install Java.
+                 ▪
+                 Install Jenkins.
+                 ▪
+                 Install the required packages (Docker, Trivy).
+                 ▪
+                 Use Ansible roles.
+                 ▪
+                 Use Dynamic Inventory.
+                 ▪
+    •    Deliverables:
+            o Ansible inventory, playbook, and roles are committed to the repository.
+
+
+
+
+                                               1
+5. Container Orchestration with kubernetes:
+
+      •    Task:
+             o Create iVolve namespace.
+             o Configure Deployment for each microservice.
+             o Configure Service for each microservice.
+             o Configure Statefulset for database.
+             o Configure Headless service for Statefulset.
+             o Configure StorgaeClass to store data from the Statefulset.
+             o Configure ConfigMap and Secret for the environment variables.
+             o Create ingress for accessing the frontend microservice.
+      •    Deliverables:
+             o Required YAML files are committed to the repository.
+
+
+
+
+6. Continuous Integration with Jenkins:
+
+  •       Task:
+             o  Deliver Jenkins pipeline for each microservice.
+                   ▪ Stages: Build Image, Scan Image, Push Image, Delete Image
+                       Locally, Update Manifests, Push Manifests.
+                   ▪ Use Shared Library.
+  •       Deliverables:
+             o Jenkins files are committed to the repository.
+             o Shared library directory (vars) is committed to the repository.
+
+
+
+
+7. Continuous Deployment with ArgoCD:
+
+  •       Task:
+             o Configure ArgoCD to sync and deploy your app into cluster.
+  •       Deliverables:
+             o ArgoCD Application is committed to the repository.
+
+
+
+
+8. Documentation:
+
+  •       Task:
+             o    Deliver comprehensive documentation:
+                     ▪ Setup instructions.
+                     ▪ Architecture overview.
+
+
+
+
+                                             2
+
