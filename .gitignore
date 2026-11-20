@@ -1,2 +1,28 @@
+# Environment secrets
 .env
+.env.*
+!.env.example
+
+# Terraform temporary files
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+
+# Local Terraform variables
+*.tfvars
+!*.tfvars.example
+
+# Backend credentials/configuration
+Terraform/backend/*.hcl
+!Terraform/backend/*.hcl.example
+
+# Sensitive keys
+*.pem
+*.key
+.aws/
+
+# Logs
 *.log
