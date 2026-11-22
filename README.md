@@ -195,3 +195,9 @@ This project demonstrates the implementation of a DevOps environment covering ap
 
 It brings together several DevOps tools and technologies to demonstrate an automated application delivery workflow, from building application services to deploying them in a Kubernetes cluster.
 
+
+## Additional Documentation
+
+For detailed setup instructions and the complete architecture overview, see:
+
+- [Setup Instructions and Architecture Overview](docs/SETUP_AND_ARCHITECTURE.md)
