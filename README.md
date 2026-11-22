@@ -1,545 +1,197 @@
-<p align="center">
-  <img src="frontend/public/images/nti-logo.png" height="100"/>
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="frontend/public/images/ivolve-logo.png" height="100"/>
-</p>
+# Cloud DevOps Project
 
-<h1 align="center" style="font-family: 'Poppins', sans-serif; color: #e0e0e0; font-size: 2.8rem;">
-   DevOps Project
-</h1>
+## 1. Project Overview
 
-<h3 align="center" style="font-family: 'Poppins', sans-serif; color: #b0bec5;">
-  In Collaboration with iVolve Technologies
-</h3>
+This project demonstrates an automated Cloud DevOps workflow for deploying a microservices-based application.
 
-<p align="center" style="max-width: 700px; font-size: 1.1rem; color: #cfd8dc;">
-  This project represents the culmination of the DevOps training at the National Telecommunication Institute (NTI),
-  in partnership with iVolve Technologies. 
-</p>
+It combines application containerization, Infrastructure as Code, CI/CD automation, security scanning, container registry management, and Kubernetes deployment.
 
----
+The project aims to demonstrate how modern DevOps tools can be integrated to automate the application delivery lifecycle.
 
-A simple microservices-based web application designed as a DevOps practice project. The application provides user registration and authentication, followed by a main DevOps Roadmap page after successful login. The project is implemented using multiple microservices, with each service responsible for a specific part of the application. The application is containerized using Docker. Each microservice contains its own `Dockerfile` and can be built and deployed independently.
-
----
-
-## 1. Architecture
-
-The application follows a microservices architecture consisting of:
-
-* **Frontend Service** – Provides the web interface and handles user interaction.
-* **Auth Service** – Handles user registration and login.
-* **Roadmap Service** – Provides the DevOps Roadmap/main application functionality.
-* **MySQL** – Stores user account information.
-
-### High-Level Architecture
-
-```text
-                         ┌─────────────────────┐
-                         │       Browser       │
-                         └──────────┬──────────┘
-                                    │
-                                    │ HTTP
-                                    ▼
-                         ┌─────────────────────┐
-                         │   Frontend Service  │
-                         │      Node.js        │
-                         └──────────┬──────────┘
-                                    │
-                         ┌──────────┴──────────┐
-                         │                     │
-                         │ HTTP                │ HTTP
-                         ▼                     ▼
-                ┌─────────────────┐   ┌──────────────────┐
-                │   Auth Service  │   │ Roadmap Service  │
-                │      Java       │   │     Python       │
-                └────────┬────────┘   └──────────────────┘
-                         │                      
-                         │                      
-                         ▼                      
-                ┌─────────────────┐   
-                │      MySQL      │   
-                └─────────────────┘   
-```
+## 2. Application Architecture
 
----
+The application consists of four main components:
 
-## 2. Services
+- **Frontend:** Node.js application providing the user interface.
+- **Auth Service:** Python Flask microservice responsible for authentication.
+- **Roadmap Service:** Java Spring Boot microservice.
+- **Database:** MySQL for data storage.
 
-The project contains three application microservices.
+The application components are containerized using Docker and can run together using Docker Compose.
 
-| Service         | Technology              | Responsibility                                 |
-| --------------- | ------------------------ | ----------------------------------------------- |
-| Frontend        | Node.js / Express / EJS  | Web UI and communication with backend services |
-| Auth Service    | Java                      | User registration and authentication           |
-| Roadmap Service | Python                    | DevOps roadmap/application data                |
+## 3. Technologies and Tools
 
-The databases are external dependencies of the microservices.
+| Category | Technologies |
+|----------|-------------|
+| Programming Languages | Java, Python, JavaScript |
+| Backend Frameworks | Spring Boot, Flask |
+| Database | MySQL |
+| Containerization | Docker |
+| Container Orchestration | Kubernetes |
+| Local Kubernetes | Minikube |
+| Infrastructure as Code | Terraform |
+| CI/CD | GitHub Actions |
+| Self-hosted Runner | GitHub Actions Runner |
+| Container Registry | Docker Hub |
+| Security Scanning | Gitleaks, Trivy |
+| Version Control | Git, GitHub |
+| Operating System | Ubuntu Linux (WSL2) |
 
-| Database       | Type       | Used By         | Purpose                         |
-| -------------- | ---------- | ---------------- | -------------------------------- |
-| MySQL          | Relational | Auth Service     | Stores registered users         |
+## 4. Docker and Containerization
 
----
+Docker was used to containerize the application services.
 
-## 3. Frontend Service
+Docker Compose was configured to run the application components together:
 
-The frontend is responsible for providing the user interface.
+- Frontend
+- Authentication Service
+- Roadmap Service
+- MySQL Database
 
-It contains two main pages:
+This provides a consistent environment for running the application and managing its services.
 
-### Authentication Page
+## 5. Infrastructure as Code - Terraform
 
-Users can:
+Terraform was used to organize the infrastructure configuration through reusable modules.
 
-* Create an account
-* Log in
-* Submit their credentials to the Auth Service
-
-### Roadmap Page
-
-After successful authentication, the user is redirected to the main application page containing the DevOps Roadmap.
-
-### Technology
-
-* Node.js
-* Express.js
-* EJS
-* HTML
-* CSS
-
-### Directory Structure
-
-```text
-frontend/
-├── Dockerfile
-├── package.json
-├── server.js
-├── public/
-│   ├── css/
-│   │   └── style.css
-│   └── images/
-│       ├── ivolve-logo.png
-│       └── nti-logo.png
-└── views/
-    ├── auth.ejs
-    ├── error.ejs
-    └── roadmap.ejs
-```
-
-### Port
-
-```text
-Frontend: 3000
-```
-
-The frontend listens for incoming HTTP requests on the configured port.
-
-### Environment Variables
-
-The frontend requires the following environment variables:
-
-```text
-AUTH_SERVICE_URL=<AUTH_SERVICE_URL>
-ROADMAP_SERVICE_URL=<ROADMAP_SERVICE_URL>
-```
-
-Example:
+The infrastructure configuration includes modules for:
 
-```text
-AUTH_SERVICE_URL=http://auth-service:<AUTH_SERVICE_PORT>
-ROADMAP_SERVICE_URL=http://roadmap-service:<ROADMAP_SERVICE_PORT>
-```
+- Networking
+- Server resources
+- Amazon EKS
+- Amazon ECR
 
-> The actual values should be provided through the deployment environment.
+Terraform formatting and validation were performed to verify the configuration.
 
----
+**Implementation note:** Terraform modules were validated, but AWS infrastructure provisioning was not performed as part of the completed deployment.
 
-## 4. Auth Service
+## 6. Continuous Integration and Continuous Delivery (CI/CD)
 
-The Auth Service is responsible for user authentication and account management.
+GitHub Actions was used to automate the application delivery workflow.
 
-It handles:
+The project includes the following workflows:
 
-* User registration
-* User login
-* Credential validation
-* Password storage
-* Communication with MySQL
+### 6.1 CI - Build Microservices
 
-The Auth Service is the **only service that communicates directly with the MySQL database** for user account information.
+This workflow automates the build process for the application microservices.
 
-### Responsibilities
+### 6.2 Security Scanning
 
-```text
-Signup
-   │
-   ▼
-Auth Service
-   │
-   ▼
-MySQL
-   │
-   ▼
-User Created
-```
+Security checks were integrated into the pipeline using:
 
-For login:
+- **Gitleaks:** Detects exposed secrets and credentials.
+- **Trivy:** Scans container images for security vulnerabilities.
 
-```text
-User
- │
- ▼
-Frontend
- │
- ▼
-Auth Service
- │
- ▼
-MySQL
- │
- ▼
-Credentials Validated
-```
+### 6.3 Docker Build and Push
 
-### Technology
+The pipeline automates:
 
-* Java
-* Spring Boot
-* MySQL
+1. Building Docker images.
+2. Preparing images for publishing.
+3. Pushing images to Docker Hub.
 
-### Port
+### 6.4 Kubernetes Deployment
 
-```text
-Auth Service: 5000
-```
+A self-hosted GitHub Actions Runner was configured to execute deployment tasks.
 
-### Environment Variables
+The runner connects the GitHub Actions workflow to the local Minikube Kubernetes cluster.
 
-The Auth Service requires database connection information.
+This enables automated deployment of the application to Kubernetes.
 
-```text
-DB_HOST=<MYSQL_HOST>
-DB_PORT=<MYSQL_PORT>
-DB_NAME=<MYSQL_DATABASE>
-DB_USER=<MYSQL_USERNAME>
-DB_PASSWORD=<MYSQL_PASSWORD>
-```
+## 7. Kubernetes Deployment
 
-Example:
+Minikube was used as the local Kubernetes environment.
 
-```text
-DB_HOST=mysql
-DB_PORT=3306
-DB_NAME=ivolve
-DB_USER=ibrahim
-DB_PASSWORD=pass@123
-```
+The application was deployed using Kubernetes resources.
 
----
+The following application components were successfully deployed:
 
-## 5. Roadmap Service
+- Frontend
+- Authentication Service
+- Roadmap Service
+- MySQL Database
 
-The Roadmap Service provides the data and functionality used by the main DevOps Roadmap page.
+All four application components reached the Running state in the Kubernetes cluster.
 
-It is separated from the authentication functionality so that roadmap/application functionality can be developed and deployed independently from user authentication.
+The deployment workflow was integrated with GitHub Actions using the self-hosted runner.
 
-### Responsibilities
+## 8. CI/CD Workflow
 
-* Provide roadmap data
-* Process roadmap-related requests
-* Return roadmap information to the frontend
+The implemented delivery process can be summarized as follows:
 
-### Technology
+1. Developer pushes code to GitHub.
+2. GitHub Actions triggers the CI workflows.
+3. Application microservices are built.
+4. Security scanning is performed using Gitleaks and Trivy.
+5. Docker images are built.
+6. Images are pushed to Docker Hub.
+7. The self-hosted runner executes the Kubernetes deployment workflow.
+8. The application is deployed to the Minikube cluster.
+9. Kubernetes runs the application components.
 
-* Python
-* Flask/FastAPI
+## 9. Workflow Execution and Verification
 
-### Port
+The following GitHub Actions workflows were executed successfully:
 
-```text
-Roadmap Service: 8080
-```
+| Workflow | Result |
+|----------|--------|
+| CI - Build Microservices | Successful |
+| Security Scanning | Successful |
+| Docker Build and Push | Successful |
+| Deploy to Minikube | Successful |
 
----
+The self-hosted runner service was also verified to be active.
 
-## 6. Database Architecture
+Kubernetes deployment status was checked, and all four application components were confirmed in the Running state.
 
-The application uses MySQL to store user information.
+## 10. Project Structure
 
-The Auth Service communicates directly with MySQL.
+The repository contains the application source code, Docker configuration, Terraform infrastructure configuration, Kubernetes deployment files, and GitHub Actions workflows.
 
-**Database**
+Main project components include:
 
-```text
-ivolve
-```
+- Application microservices
+- Docker and Docker Compose configuration
+- Terraform modules
+- Kubernetes manifests
+- GitHub Actions workflows
+- README documentation
 
-**Table**
+## 11. Project Achievements
 
-```text
-users
-```
+The following tasks were implemented:
 
-**User Information**
+- Developed and organized a microservices-based application.
+- Containerized application components using Docker.
+- Configured Docker Compose for local application execution.
+- Organized infrastructure configuration using Terraform modules.
+- Validated Terraform configurations.
+- Implemented automated CI workflows using GitHub Actions.
+- Integrated Gitleaks for secret detection.
+- Integrated Trivy for container security scanning.
+- Automated Docker image building and publishing to Docker Hub.
+- Configured a self-hosted GitHub Actions Runner.
+- Set up a local Kubernetes environment using Minikube.
+- Automated Kubernetes deployment through GitHub Actions.
+- Verified successful execution of all implemented workflows.
+- Verified that all application components were running in Kubernetes.
 
-The user database contains information such as:
+## 12. Implementation Scope and Future Improvements
 
-```text
-username
-password_hash
-```
----
+The current implementation focuses on Docker-based application delivery, GitHub Actions automation, security scanning, Terraform validation, and Kubernetes deployment on Minikube.
 
-## 7. Service Communication
+The following technologies and tasks remain outside the completed implementation:
 
-The frontend acts as the entry point for users.
+- Actual AWS infrastructure provisioning.
+- Ansible configuration management.
+- Jenkins-based CI/CD.
+- ArgoCD-based GitOps deployment.
 
-Backend communication follows this model:
+These can be considered future improvements to extend the project toward a complete cloud-based DevOps environment.
 
-```text
-Browser
-   │
-   ▼
-Frontend
-   │
-   ├──────────────► Auth Service ─────────────► MySQL
-   │
-   └──────────────► Roadmap Service
-```
+## 13. Conclusion
 
-The frontend does not communicate directly with the databases.
+This project demonstrates the implementation of a DevOps environment covering application containerization, infrastructure provisioning configuration, automated CI/CD pipelines, security scanning, container image publishing, and Kubernetes deployment.
 
-This provides separation between:
+It brings together several DevOps tools and technologies to demonstrate an automated application delivery workflow, from building application services to deploying them in a Kubernetes cluster.
 
-* User interface
-* Authentication
-* Application functionality
-* Data storage
-
----
-
-## 8. Authentication Flow
-
-### User Registration
-
-```text
-1. User opens the application.
-2. User enters username and password.
-3. Frontend receives the registration request.
-4. Frontend sends the request to the Auth Service.
-5. Auth Service validates the request.
-6. Auth Service stores the user in MySQL.
-7. Auth Service returns the result to the Frontend.
-8. Frontend displays the result to the user.
-```
-
-### User Login
-
-```text
-1. User enters email and password.
-2. Frontend sends the credentials to the Auth Service.
-3. Auth Service checks MySQL.
-4. Credentials are validated.
-5. Auth Service returns the authentication result.
-6. Frontend allows the user to access the main application page.
-```
-
----
-
-## 9. API Endpoints
-
-The exact endpoints should match the implementation in each service.
-
-### Auth Service
-
-Typical endpoints:
-
-| Method | Endpoint  | Description                   |
-| ------ | --------- | ------------------------------ |
-| POST   | `/signup` | Create a new user             |
-| POST   | `/login`  | Authenticate an existing user |
-
-Example signup request:
-
-```json
-{
-  "username": "john@example.com",
-  "password": "********"
-}
-```
-
-Example login request:
-
-```json
-{
-  "username": "john@example.com",
-  "password": "********"
-}
-```
-
-### Roadmap Service
-
-Typical endpoints:
-
-| Method | Endpoint   | Description                  |
-| ------ | ---------- | ------------------------------ |
-| GET    | `/roadmap` | Retrieve roadmap information |
-| GET    | `/health`  | Service health check         |
-
-> Update this section if the actual API paths differ.
-
----
-
-## 10. Ports
-
-The following table should be kept synchronized with the application configuration.
-
-| Component       |                     Port | Protocol | Purpose              |
-| --------------- | ------------------------: | -------- | --------------------- |
-| Frontend        |                    `3000` | HTTP     | Web application      |
-| Auth Service    |                    `5000` | HTTP     | Authentication API   |
-| Roadmap Service |                    `8080` | HTTP     | Roadmap API          |
-| MySQL           |                    `3306` | TCP      | User database        |
-
----
-
-## 11. Environment Variables
-
-Configuration should be provided through environment variables instead of hardcoding values into the application.
-
-### Frontend
-
-```text
-AUTH_SERVICE_URL=<AUTH_SERVICE_URL>
-ROADMAP_SERVICE_URL=<ROADMAP_SERVICE_URL>
-```
-
-### Auth Service
-
-```text
-DB_HOST=<MYSQL_HOST>
-DB_PORT=<MYSQL_PORT>
-DB_NAME=<MYSQL_DATABASE>
-DB_USER=<MYSQL_USERNAME>
-DB_PASSWORD=<MYSQL_PASSWORD>
-```
-
----
-
-## 12. Docker
-
-Each microservice has its own Dockerfile.
-
-The services are designed to be containerized independently.
-
-Example repository structure:
-
-```text
-project/
-│
-├── frontend/
-│   ├── Dockerfile
-│   ├── package.json
-│   ├── server.js
-│   └── ...
-│
-├── auth-service/
-│   ├── Dockerfile
-│   ├── pom.xml
-│   └── ...
-│
-├── roadmap-service/
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── ...
-│
-└── README.md
-```
-
-Each Dockerfile is responsible for:
-
-1. Selecting the required base image.
-2. Installing application dependencies.
-3. Copying the application source code.
-4. Configuring the application.
-5. Exposing the required application port.
-6. Starting the microservice.
-
-### Building an Image
-
-From a service directory:
-
-```bash
-docker build -t <service-name>:latest .
-```
-
-Example:
-
-```bash
-cd frontend
-docker build -t frontend:latest .
-```
-
-The same approach can be used for the other services.
-
----
-
-## 13. Running the Services Independently
-
-Because the services are independent, each service can be built and run separately.
-
-Example:
-
-```bash
-docker build -t frontend:latest ./frontend
-docker build -t auth-service:latest ./auth-service
-docker build -t roadmap-service:latest ./roadmap-service
-```
-
-When running the containers, provide the required environment variables.
-
-Example:
-
-```bash
-docker run \
-  -p <FRONTEND_PORT>:<FRONTEND_PORT> \
-  -e AUTH_SERVICE_URL=<AUTH_SERVICE_URL> \
-  -e ROADMAP_SERVICE_URL=<ROADMAP_SERVICE_URL> \
-  frontend:latest
-```
-
-Database services must be available before starting the microservices that depend on them.
-
----
-
-## 14. Repository Structure
-
-The repository is organized by microservice.
-
-```text
-.
-├── frontend/
-│   ├── Dockerfile
-│   ├── package.json
-│   ├── server.js
-│   ├── public/
-│   │   └── css/
-│   │       └── style.css
-│   └── views/
-│       ├── auth.ejs
-│       ├── error.ejs
-│       └── roadmap.ejs
-│
-├── auth-service/
-│   ├── Dockerfile
-│   └── ...
-│
-├── roadmap-service/
-│   ├── Dockerfile
-│   └── ...
-│
-└── README.md
-```
-
----
