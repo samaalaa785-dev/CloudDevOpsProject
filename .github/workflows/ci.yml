@@ -1,0 +1,24 @@
+name: CI - Build Microservices
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Auth Service
+        run: docker build -t auth-service ./auth-service
+
+      - name: Build Roadmap Service
+        run: docker build -t roadmap-service ./roadmap-service
+
+      - name: Build Frontend
+        run: docker build -t frontend ./frontend
