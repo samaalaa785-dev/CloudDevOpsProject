@@ -1,0 +1,42 @@
+name: Docker Build and Push
+
+on:
+  push:
+    branches: [main]
+
+  workflow_dispatch:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Docker Hub Login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Auth
+        uses: docker/build-push-action@v6
+        with:
+          context: ./auth-service
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ivolve-auth:latest
+
+      - name: Build and Push Roadmap
+        uses: docker/build-push-action@v6
+        with:
+          context: ./roadmap-service
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ivolve-roadmap:latest
+
+      - name: Build and Push Frontend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ivolve-frontend:latest
