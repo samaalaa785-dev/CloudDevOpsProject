@@ -26,3 +26,4 @@ Terraform/backend/*.hcl
 
 # Logs
 *.log
+/actions-runner/

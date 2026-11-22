@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: roadmap-service
-          image: roadmap-service:latest
+          image: sama2alaa/ivolve-roadmap:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

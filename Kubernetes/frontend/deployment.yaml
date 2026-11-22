@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: frontend:latest
+          image: sama2alaa/ivolve-frontend:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
