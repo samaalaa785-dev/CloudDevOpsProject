@@ -1,0 +1,59 @@
+name: Deploy to Minikube
+
+on:
+  workflow_run:
+    workflows: ["Docker Build and Push"]
+    types: [completed]
+    branches: [main]
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+
+    runs-on: self-hosted
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Check Kubernetes Connection
+        run: |
+          kubectl config current-context
+          kubectl get nodes
+
+      - name: Deploy Namespace and ConfigMap
+        run: |
+          kubectl apply -f Kubernetes/namespace.yaml
+          kubectl apply -f Kubernetes/configmap.yaml
+
+      - name: Deploy MySQL
+        run: |
+          kubectl apply -f Kubernetes/mysql/
+          kubectl rollout status statefulset/mysql -n ivolve --timeout=180s
+
+      - name: Deploy Microservices
+        run: |
+          kubectl apply -f Kubernetes/auth/
+          kubectl apply -f Kubernetes/roadmap/
+          kubectl apply -f Kubernetes/frontend/
+
+      - name: Verify Deployments
+        run: |
+          kubectl rollout status deployment/auth-service -n ivolve --timeout=180s
+          kubectl rollout status deployment/roadmap-service -n ivolve --timeout=180s
+          kubectl rollout status deployment/frontend -n ivolve --timeout=180s
+
+      - name: Verify Pods
+        run: |
+          kubectl get pods -n ivolve
+          kubectl get services -n ivolve
